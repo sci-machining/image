@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - React & CSS Grid Image and Video Gallery</title>
+  <title>CodePen - React &amp; CSS Grid Image Gallery</title>
 
   <style>
     @charset "UTF-8";
@@ -202,30 +202,18 @@
   <!-- partial:index.partial.html -->
   <section class="gallery-container"></section>
   <!-- partial -->
-
   <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js'></script>
 
   <script>
-    const mediaItems = [
-      {
-        type: 'image',
-        url:  'https://am3pap007files.storage.live.com/y4maFwMe2PzWDwnfwGeicB2cCnNXQRmfh2cAUt-tmgO2jJrjH523Ixq1ZT3l8uy2onL9s74Q6qX37DVmLm8TRcYMLmpcg1f-Ii6_-f_nigVQ9V_e40dk61aHdlJNZ7VJSl_aY6nxS_pYWizSDI5APFj_pnoi8NIvhTKCw12eyOjHU-qEKQ5yxLIdrlWFju3PnSwVIDn73m14SlSsqL5SIKJPQ?encodeFailures=1&width=640&height=480',
+    const imgUrls = ['https://am3pap007files.storage.live.com/y4maFwMe2PzWDwnfwGeicB2cCnNXQRmfh2cAUt-tmgO2jJrjH523Ixq1ZT3l8uy2onL9s74Q6qX37DVmLm8TRcYMLmpcg1f-Ii6_-f_nigVQ9V_e40dk61aHdlJNZ7VJSl_aY6nxS_pYWizSDI5APFj_pnoi8NIvhTKCw12eyOjHU-qEKQ5yxLIdrlWFju3PnSwVIDn73m14SlSsqL5SIKJPQ?encodeFailures=1&width=640&height=480',
+                    'https://am3pap007files.storage.live.com/y4mxHX1qDBwtlIhU5kqjqKdWwKRl3qbonKi1PqAy3ieDbHxAgyOaOAOKEVfPYCujn1sYaFtuqYbzS2Wr5B35xMiaDZSf5tFrnqpzuFpw5yl_C6YO-Dc9knvx0IptBlhRFFUqjmdsyP9dd_dimpw1s-CVfwEuS7mYRwM8FMHPbQxwEcOUnFG1VSETwV040gWXC8tYcmAW-GVWmrI0hbGOt2ljA?encodeFailures=1&width=640&height=480',
+                    'https://am3pap007files.storage.live.com/y4mCV4me0nORAFAcBAgOvxIZa97BY8MlwaFY4lEzrrF37_yckFJN7bvQOXl3gPqMsxx4GwZTA8B2oeviVB8Wz_B6yftjEMqT8efJla85yGjdzLUvuSXISeNkbxOF0EE_2gz2NBsRjONlRnAdOwgQxwCGV2bNP6SIksKYjzf8jVQLHtdMPsLbE-YYJElpSVV7E8f2RB-Q_HqNgleW_rkhk--wA?encodeFailures=1&width=640&height=480',
+                    'https://am3pap007files.storage.live.com/y4mFTpTAHz-Gj5s6Uy1M07ZEd2rbjhp7p0ZfDG-bmacsQOojuZsYKq5wtbo72sUUQ1ulqq4Kn2UIbl1r0zKm4XPL1s2SX6zStSl0DQaDp2LK7riBYdQbSMo63wa13olfsDAj2S8dG7qQgZ2AJxN1SQbAqCOG0R4itSvSwuDVemLrHOueluzU7Lncpz1QieuU-LwbUhd3iNYgXFLtbTNngz6Xw?encodeFailures=1&width=640&height=480',
+                    'https://am3pap007files.storage.live.com/y4mUfLcguR0ZauemVJd9PP_JI2ofvAFrGy5qQgiyFCkBp9Q8CkTFMqU5i5r_lHQ8am7NbLL9-Z-DmfDsbRxc4OCR18gll-Bo5zXHPwov6LquoCEA3UZ-WWA5cM-qYsxxfkjp5v72SUc__dReEar6EzMBaDpydDYdB4gpH-zMG1cPem6m0Zbp-dnIibT57sDz4R2AwW5h5zFsziUnjUhfWf7lA?encodeFailures=1&width=436&height=581',
+                    'https://am3pap007files.storage.live.com/y4mzr8eCxZrvc2Wal-uvw9IQjBpI5fSQz-EhyyqR_aajigrFRxzAwBuyjMqms2mf6_GAMZ7hJdzQSGKCyeHBMUiWA3Lun1RhTdv_5R68Tzuo5zgT6HbZ_WTvLGObyr6qoM8xrfqiPaVB04pdLSoWPmWOTptl6NpMXCZ-TgvKn-asvSWcmfdNcC9NYr5nSSbALh1-fuSF80vf2b0mt6lQ0-l4Q?encodeFailures=1&width=775&height=581',
+                    ];
 
-      },
-      {
-        type: 'image',
-        url: 'https://am3pap007files.storage.live.com/y4mxHX1qDBwtlIhU5kqjqKdWwKRl3qbonKi1PqAy3ieDbHxAgyOaOAOKEVfPYCujn1sYaFtuqYbzS2Wr5B35xMiaDZSf5tFrnqpzuFpw5yl_C6YO-Dc9knvx0IptBlhRFFUqjmdsyP9dd_dimpw1s-CVfwEuS7mYRwM8FMHPbQxwEcOUnFG1VSETwV040gWXC8tYcmAW-GVWmrI0hbGOt2ljA?encodeFailures=1&width=640&height=480',
-     },
-      {
-        type: 'image',
-        url: 'https://am3pap007files.storage.live.com/y4mCV4me0nORAFAcBAgOvxIZa97BY8MlwaFY4lEzrrF37_yckFJN7bvQOXl3gPqMsxx4GwZTA8B2oeviVB8Wz_B6yftjEMqT8efJla85yGjdzLUvuSXISeNkbxOF0EE_2gz2NBsRjONlRnAdOwgQxwCGV2bNP6SIksKYjzf8jVQLHtdMPsLbE-YYJElpSVV7E8f2RB-Q_HqNgleW_rkhk--wA?encodeFailures=1&width=640&height=480',
-      },
-      {
-        type: 'video',
-        url: 'https://public.am.files.1drv.com/y4mFj45CgV9GzBl6RBlPJaY7ZS9DH8xfyfYVb9s3mJzQ_CKf-vwr5I2nsaSnaRYfUSsP44_Wl8KjQsssoo2cNhm72UdDnz7TWEHJs5XwRkrX94LH3PQjY-VoYB5yiXXB5EXxwMbl50PPHKQH6oytxtbEuXR5IhAZKSVS7cd1jBnV2XvnOCJBbrJn1I1dBT7OWR-xY9RuHCai7pdYssTyPm3NMMVZ-11Mxf_MDXwogpp574?',
-      },
-     ];
 
     class Gallery extends React.Component {
       constructor(props) {
@@ -234,81 +222,66 @@
         this.closeModal = this.closeModal.bind(this);
         this.findNext = this.findNext.bind(this);
         this.findPrev = this.findPrev.bind(this);
-        this.renderMediaContent = this.renderMediaContent.bind(this);
+        this.renderImageContent = this.renderImageContent.bind(this);
       }
+      renderImageContent(src, index) {
+        return /*#__PURE__*/(
+          React.createElement("div", { onClick: e => this.openModal(e, index) }, /*#__PURE__*/
+            React.createElement("img", { src: src, key: src })));
 
-      renderMediaContent(mediaItem, index) {
-        if (mediaItem.type === 'image') {
-          return (
-            <div onClick={(e) => this.openModal(e, index)}>
-              <img src={mediaItem.url} alt={`Image ${index}`} />
-            </div>
-          );
-        } else if (mediaItem.type === 'video') {
-          return (
-            <div onClick={(e) => this.openModal(e, index)}>
-              <video width="100%" controls>
-                <source src={mediaItem.url} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          );
-        }
+
       }
-
       openModal(e, index) {
         this.setState({ currentIndex: index });
       }
-
       closeModal(e) {
-        if (e !== undefined) {
+        if (e != undefined) {
           e.preventDefault();
         }
         this.setState({ currentIndex: null });
       }
-
       findPrev(e) {
-        if (e !== undefined) {
+        if (e != undefined) {
           e.preventDefault();
         }
-        this.setState((prevState) => ({
-          currentIndex: prevState.currentIndex - 1,
+        this.setState(prevState => ({
+          currentIndex: prevState.currentIndex - 1
         }));
-      }
 
+      }
       findNext(e) {
-        if (e !== undefined) {
+        if (e != undefined) {
           e.preventDefault();
         }
-        this.setState((prevState) => ({
-          currentIndex: prevState.currentIndex + 1,
+        this.setState(prevState => ({
+          currentIndex: prevState.currentIndex + 1
         }));
-      }
 
+      }
       render() {
-        return (
-          <div className="gallery-container">
-            <h1>Images and Videos</h1>
-            <div className="gallery-grid">
-              {mediaItems.map((item, index) =>
-                this.renderMediaContent(item, index)
-              )}
-            </div>
-            <GalleryModal
-              closeModal={this.closeModal}
-              findPrev={this.findPrev}
-              findNext={this.findNext}
-              hasPrev={this.state.currentIndex > 0}
-              hasNext={this.state.currentIndex + 1 < mediaItems.length}
-              mediaItem={mediaItems[this.state.currentIndex]}
-            />
-          </div>
-        );
+        return /*#__PURE__*/(
+          React.createElement("div", { className: "gallery-container" }, /*#__PURE__*/
+            React.createElement("h1", null, "تصاویر"), /*#__PURE__*/
+            React.createElement("div", { className: "gallery-grid" },
+              imgUrls.map(this.renderImageContent)), /*#__PURE__*/
+
+            React.createElement(GalleryModal, {
+              closeModal: this.closeModal,
+              findPrev: this.findPrev,
+              findNext: this.findNext,
+              hasPrev: this.state.currentIndex > 0,
+              hasNext: this.state.currentIndex + 1 < imgUrls.length,
+              src: imgUrls[this.state.currentIndex]
+            })));
+
+
+
       }
     }
 
+
     class GalleryModal extends React.Component {
-       constructor() {
+      constructor() {
         super();
         this.handleKeyDown = this.handleKeyDown.bind(this);
       }
@@ -348,8 +321,10 @@
       }
     }
 
-    ReactDOM.render(<Gallery />, document.querySelector('.gallery-container'));
+
+    ReactDOM.render( /*#__PURE__*/React.createElement(Gallery, null), document.querySelector('.gallery-container'));
   </script>
+
 </body>
 
 </html>
