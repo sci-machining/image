@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - React &amp; CSS Grid Image Gallery</title>
+
+  <style>
+    @charset "UTF-8";
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      font-family: helvetica;
+      position: relative;
+      font-size: 100%;
+      background: linear-gradient(to bottom, #ffffff, #66b3ff) ;
+
+    }
+
+    .gallery-container {
+      padding: 0.9375rem 0;
+    }
+
+    .gallery-container h1 {
+      margin: 2rem 0;
+      padding: 0;
+      text-align: center;
+      color: #ff ;
+      text-transform: uppercase;
+      font-size: 6.5vw;
+      font-weight: lighter;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 8px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 20em) {
+      .gallery-grid {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+
+    @media (min-width: 34em) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 60em) {
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .gallery-grid img {
+      width: 100% ;
+      border: 5px solid #fff;
+    }
+
+    .gallery-grid div {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .gallery-grid div:before,
+    .gallery-grid div:after {
+      transition: 0.3s opacity ease;
+      opacity: 0;
+    }
+
+    .gallery-grid div:after {
+      content: "↔";
+      font-size: 80px;
+      position: absolute;
+      transform: translate3d(-50%, -50%, 0) rotate(-45deg);
+      color: #00 ;
+      left: 50%;
+      top: 50%;
+      display: block;
+    }
+
+    .gallery-grid div:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 4px;
+      left: 0;
+      right: 0;
+      background: rgba(34, 34, 34, 0.5);
+      display: block;
+    }
+
+    .gallery-grid div:hover:before,
+    .gallery-grid div:hover:after {
+      opacity: 1;
+      transition: 0.3s opacity ease;
+    }
+
+    .modal {
+      position: fixed;
+      z-index: 999;
+      width: 50%;
+      max-width: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+    }
+
+    @media (min-width: 20em) {
+      .modal {
+        width: 95%;
+      }
+    }
+
+    @media (min-width: 34em) {
+      .modal {
+        width: 80%;
+      }
+    }
+
+    @media (min-width: 60em) {
+      .modal {
+        width: 60%;
+      }
+    }
+
+    .modal img {
+      width: 100%;
+      border: 5px solid #fff;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      z-index: 1;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      top: 0;
+      left: 0;
+    }
+
+    .modal-body a {
+      position: absolute;
+      display: inline;
+      color: #222;
+      text-decoration: none;
+      line-height: 36px;
+      font-size: 30px;
+      font-weight: lighter;
+      background: #00 ;
+      border-radius: 5px;
+      height: 40px;
+      width: 40px;
+      text-align: center;
+    }
+
+    .modal-body .modal-close {
+      right: 0;
+      top: 0;
+      border-radius: 0 0 0 5px;
+    }
+
+    .modal-body .modal-next,
+    .modal-body .modal-prev {
+      right: 0;
+      top: calc(50% - 25px);
+      border-radius: 5px 0 0 5px;
+      height: 50px;
+      line-height: 40px;
+      font-size: 60px;
+    }
+
+    .modal-body .modal-prev {
+      left: 0;
+      right: auto;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .modal-body {
+      position: relative;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+  <section class="gallery-container"></section>
+  <!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js'></script>
+
+  <script>
+     const imgUrls = ['https://db3pap007files.storage.live.com/y4mLXSLD7fmCxocaILCLbBwlWtc1iMfJxjveXM_jS8mrQMFjFu97MhFhXCHeCiVXaJHayl3m-EqQa9ZwRZ8IkUmAvQEilTCG7h4XCnzUggqrED4MGPQjZKwE03VZ0yVlhYGnVX9gPjy8IsOZ3FJkAG9ZeYWhMFLem2pYGk0qi-_qYDKHTaNusqRbXR7KGCFs-0u5q5EqNLCHs2T74xdSVDHag?encodeFailures=1&width=772&height=581',
+'https://db3pap007files.storage.live.com/y4mXWz1yDsJ3Xqdt-bSCjWIcrNaAtbvg3w_kn724PvVj23F77imMeZItIDfU9_j3ZJ9qgK3fvgYvLpYgFIose2xhrW_1OsKC-VePfZYMyppXFkIWwPkRszrd-qSs9QO4ppEwOYP0fhhPnmRreqEI9XArOnnPigFtQbHmWw6TBsE8jdUTajmEZy_9FoBobBiFISuwxLbyZOffDaQq3rs5w7jRQ?encodeFailures=1&width=775&height=581',
+'https://db3pap007files.storage.live.com/y4mh4cAYwjcQOa52dRP9PIndEO0VW6gH4kp-mf9n93pDdnU4Eyo7VIlr_592D_Qoctmx4ag3goA7XWQRXkOB8gv8sM81XUwxiH-XwLVKzwysABMr23f0n-Wjw8iUcptuJTCN2c8Yu4751huv6ip-t5_FUMfSLVFq3ry1r2qc0Z1sV8ng25Ck8dwtNGrAfvLGFKR5O-yvq4x-vzLCkGrJ0ShKQ?encodeFailures=1&width=731&height=581',
+'https://db3pap007files.storage.live.com/y4m3XUqasbSzcgrfWgb2tLCnNCMHYpNII5sE2iZifBFTfRKdWR4gwZoCMlnXbB2v5PoXibnre6fg4S69toD03qUbsP2k2mLGqA0VhsijREh1FE0yZOXW28Udz2Oi-zTSEr5GeBI9QQ7-0ZiP95Uz9xpxf1gSjAFVGYlLSCXBsoYqfTkEVClTNkjkY49kbaXDT8SNNk1mKdtXqaRiiWq2asarA?encodeFailures=1&width=436&height=581',
+'https://db3pap007files.storage.live.com/y4mV1llja-6RBdF0wI3rfDXqcudelut2_18L-SSF0PrH6mDF5yCLPLVxak3CkB9A3w9eZ05stisBsm2tbO3oO-jRyyvMevWTdNvzG3AaehuPT40dQIZPR_ThF-Jmsnk_vNz2N_RVsbLXGobdt66tLMK2tfIuYQJLDuX0oHerx-by2qpJNyVMxqqf1H3VvgE0_m9XQXwv6EqU2D6VosDLpdiBA?encodeFailures=1&width=436&height=581',
+'https://db3pap007files.storage.live.com/y4mz0CvXmBs_9t1mVjNZg-8QzkPOSBaPYtp07DRndG9P9NA35jzGRdRavLSu3NHVsV1uFVYgIOlGghQO7bazWx3gbizSwlB_-VdqZdmZRFDIORjK8O1w05VXHCJfc2HcOeRzT_t9OhBZrK_9J2aNKhOCl_GQzMgc8_KR60fEnFVt2xqEZjd1himIjrU65RCWIXQoKv_0J3NHDgi8d-WXrEC0Q?encodeFailures=1&width=436&height=581',
+'https://db3pap007files.storage.live.com/y4mKMnpt5jYcKuspVqtDmowTsyFWLDlWR08Ua5jEiw52T4b73YuaBYr2yTEX6NP3PCoVFfcVA7UlcsgbBJ96Rn-8rPslI-wyyHNB9fyeV2N8lUDKmBP3bmA6RcogkDEGE8azQng4sbz6LyM75cQi6fE7Wfb_cLb8knc1GRF-P1LheM4PNxDOP12Ueq__OZsf8Vn2dCAtkBfcohOnYwBLJS57A?encodeFailures=1&width=775&height=581',
+'https://db3pap007files.storage.live.com/y4msthvvwWWvPvtAcFvw_MKrBBlLlJgO1rcItmHV76Z7rsrd2te0ewM8GnMauYd0EQp0vcuNGmiWrTH81-8SOXGMxQoDiLXkBibJh275mLn9emuN4XQjw8AQWDipUnjNFNHrGoqJA-TFRy67byOnDWmHvGhdOQyrdjqvUB-l7_-MsOdUhsOwU5DuUhWxxUPhC6A20zH8K3_nsphE_D4pbsE8w?encodeFailures=1&width=775&height=581',
+'https://db3pap007files.storage.live.com/y4m0nBQ9LTXEji4CBJwr86_XRXh08cvJnvZxj2VP1Ezs9ikQ7pFDgvM-DPeaO-pNotNLFJjF9J13I0L1qq95LG7peBZFKCET09VqqALfxHX5LKAK9JLptrACWqVc8tGrKTAb_OsC91Sv_i4ciT23YyHGwazZ-XZQkW0IwdzOD3Oj2x9LPLrFa-2wd8LnkYkcX2vuU-Miu4Vn8P24Y32fkVw8A?encodeFailures=1&width=793&height=581',];
+
+
+    class Gallery extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { currentIndex: null };
+        this.closeModal = this.closeModal.bind(this);
+        this.findNext = this.findNext.bind(this);
+        this.findPrev = this.findPrev.bind(this);
+        this.renderImageContent = this.renderImageContent.bind(this);
+      }
+      renderImageContent(src, index) {
+        return /*#__PURE__*/(
+          React.createElement("div", { onClick: e => this.openModal(e, index) }, /*#__PURE__*/
+            React.createElement("img", { src: src, key: src })));
+
+
+      }
+      openModal(e, index) {
+        this.setState({ currentIndex: index });
+      }
+      closeModal(e) {
+        if (e != undefined) {
+          e.preventDefault();
+        }
+        this.setState({ currentIndex: null });
+      }
+      findPrev(e) {
+        if (e != undefined) {
+          e.preventDefault();
+        }
+        this.setState(prevState => ({
+          currentIndex: prevState.currentIndex - 1
+        }));
+
+      }
+      findNext(e) {
+        if (e != undefined) {
+          e.preventDefault();
+        }
+        this.setState(prevState => ({
+          currentIndex: prevState.currentIndex + 1
+        }));
+
+      }
+      render() {
+        return /*#__PURE__*/(
+          React.createElement("div", { className: "gallery-container" }, /*#__PURE__*/
+            React.createElement("h1", null, "تصاویر"), /*#__PURE__*/
+            React.createElement("div", { className: "gallery-grid" },
+              imgUrls.map(this.renderImageContent)), /*#__PURE__*/
+
+            React.createElement(GalleryModal, {
+              closeModal: this.closeModal,
+              findPrev: this.findPrev,
+              findNext: this.findNext,
+              hasPrev: this.state.currentIndex > 0,
+              hasNext: this.state.currentIndex + 1 < imgUrls.length,
+              src: imgUrls[this.state.currentIndex]
+            })));
+
+
+
+      }
+    }
+
+
+    class GalleryModal extends React.Component {
+      constructor() {
+        super();
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+      }
+      componentDidMount() {
+        document.body.addEventListener('keydown', this.handleKeyDown);
+      }
+      componentWillUnMount() {
+        document.body.removeEventListener('keydown', this.handleKeyDown);
+      }
+      handleKeyDown(e) {
+        if (e.keyCode === 27)
+          this.props.closeModal();
+        if (e.keyCode === 37 && this.props.hasPrev)
+          this.props.findPrev();
+        if (e.keyCode === 39 && this.props.hasNext)
+          this.props.findNext();
+      }
+      render() {
+        const { closeModal, hasNext, hasPrev, findNext, findPrev, src } = this.props;
+        if (!src) {
+          console.log('whut');
+          return null;
+        }
+        return /*#__PURE__*/(
+          React.createElement("div", null, /*#__PURE__*/
+            React.createElement("div", { className: "modal-overlay", onClick: closeModal }), /*#__PURE__*/
+            React.createElement("div", { isOpen: !!src, className: "modal" }, /*#__PURE__*/
+              React.createElement("div", { className: "modal-body" }, /*#__PURE__*/
+                React.createElement("a", { href: "#", className: "modal-close", onClick: closeModal, onKeyDown: this.handleKeyDown }, "\xD7"),
+                hasPrev && /*#__PURE__*/React.createElement("a", { href: "#", className: "modal-prev", onClick: findPrev, onKeyDown: this.handleKeyDown }, "\u2039"),
+                hasNext && /*#__PURE__*/React.createElement("a", { href: "#", className: "modal-next", onClick: findNext, onKeyDown: this.handleKeyDown }, "\u203A"), /*#__PURE__*/
+                React.createElement("img", { src: src })))));
+
+
+
+
+      }
+    }
+
+
+    ReactDOM.render( /*#__PURE__*/React.createElement(Gallery, null), document.querySelector('.gallery-container'));
+  </script>
+
+</body>
+
+</html>
